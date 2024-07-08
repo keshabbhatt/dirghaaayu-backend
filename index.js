@@ -1,9 +1,10 @@
 // Importing required modules
 import express from "express"; // Importing Express framework for creating server and handling routes
-import * as dotenv from "dotenv"; // Importing dotenv to load environment variables from a .env file
+import dotenv from "dotenv"; // Importing dotenv to load environment variables from a .env file
 import cors from "cors"; // Importing CORS to handle Cross-Origin Resource Sharing
 import mongoose from "mongoose"; // Importing Mongoose for MongoDB object modeling
 import UserRoutes from "./routes/User.js"; // Importing user routes from a separate file
+import SymptomRoutes from "./routes/Symptom.js"; // Importing symptom routes from a separate file
 
 dotenv.config(); // Load environment variables from .env file into process.env
 
@@ -15,6 +16,9 @@ app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-enco
 
 // Use user routes for all requests starting with /api/user/
 app.use("/api/user/", UserRoutes);
+
+// Use symptom routes for all requests starting with /api/symptoms/
+app.use("/api/symptoms/", SymptomRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
