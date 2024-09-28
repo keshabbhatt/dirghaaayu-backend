@@ -1,17 +1,31 @@
-// Importing required modules and functions
-import express from "express"; // Importing Express framework for creating server and handling routes
+import express from "express";
 import {
-  UserLogin, // Importing UserLogin controller function
-  UserRegister, // Importing UserRegister controller function
-} from "../controllers/User.js"; // Importing from the User controller
-import { verifyToken } from "../middleware/verifyToken.js"; // Importing middleware to verify JWT tokens
+  UserRegister,
+  UserLogin,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAllUsers,
+} from "../controllers/User.js"; // Adjust the path as necessary
 
-// Create a new router object
-const router = express.Router(); // Creating an instance of an Express Router
+const router = express.Router();
 
-// Define route for user registration
-router.post("/signup", UserRegister); // POST request to /api/user/signup will invoke UserRegister controller
+// User registration
+router.post("/signup", UserRegister);
 
-// Define route for user login
-router.post("/signin", UserLogin); // POST request to /api/user/signin will invoke UserLogin controller
-export default router; // Exporting the router to be used in other parts of the application
+// User login
+router.post("/signin", UserLogin);
+
+// Get all users
+router.get("/", getAllUsers);
+
+// Get user by ID
+router.get("/:id", getUserById);
+
+// Update user by ID
+router.put("/update/:id", updateUser);
+
+// Delete user by ID
+router.delete("/delete/:id", deleteUser);
+
+export default router;

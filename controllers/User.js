@@ -47,7 +47,6 @@ export const UserLogin = async (req, res, next) => {
     if (!user) {
       return next(createError(404, "User not found")); // User not found error
     }
-    console.log(user);
 
     const isPasswordCorrect = await bcrypt.compareSync(password, user.password); // Compare passwords
     if (!isPasswordCorrect) {
@@ -59,6 +58,74 @@ export const UserLogin = async (req, res, next) => {
     });
 
     return res.status(200).json({ token, user }); // Return the token and user details
+  } catch (error) {
+    return next(error); // Pass any errors to the error handler
+  }
+};
+
+// Get user by ID handler
+export const getUserById = async (req, res, next) => {
+  try {
+    const { id } = req.params; // Get user ID from request params
+
+    const user = await User.findById(id); // Find user by ID
+    if (!user) {
+      return next(createError(404, "User not found")); // User not found error
+    }
+
+    return res.status(200).json(user); // Return the user details
+  } catch (error) {
+    return next(error); // Pass any errors to the error handler
+  }
+};
+
+// Update user handler (by any user)
+export const updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params; // Get user ID from request params
+    const { name, img, age } = req.body; // Destructure updated data from request body
+
+    // Update the user by ID and return the updated document
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { name, img, age } }, // Update name, img, and age
+      { new: true } // Return the updated document instead of the original
+    );
+
+    if (!updatedUser) {
+      return next(createError(404, "User not found")); // User not found error
+    }
+
+    return res.status(200).json(updatedUser); // Return updated user
+  } catch (error) {
+    return next(error); // Pass any errors to the error handler
+  }
+};
+
+// Delete user handler (by any user)
+export const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.params; // Get user ID from request params
+
+    // Find and delete the user by ID
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return next(createError(404, "User not found")); // User not found error
+    }
+
+    return res.status(200).json({ message: "User deleted successfully" }); // Return success message
+  } catch (error) {
+    return next(error); // Pass any errors to the error handler
+  }
+};
+
+
+// Get all users handler
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find(); // Find all users in the database
+    return res.status(200).json(users); // Return the list of users
   } catch (error) {
     return next(error); // Pass any errors to the error handler
   }
